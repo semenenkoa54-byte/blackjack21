@@ -1,0 +1,15 @@
+{
+  "name": "blackjack-21-vip",
+  "version": "1.0.0",
+  "description": "Blackjack 21 - Social Casino with VIP",
+  "scripts": {
+    "build": "vite build",
+    "cap:add": "npx cap add ios",
+    "cap:sync": "npx cap sync ios",
+    "cap:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/ios": "^6.1.0"
+  }
+}

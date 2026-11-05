@@ -1,0 +1,11 @@
+{
+  "appId": "com.yourname.blackjack21",
+  "appName": "Blackjack 21 VIP",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "always"
+  }
+}
