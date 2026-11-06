@@ -1,7 +1,6 @@
 {
-  "name": "BLACKJACK 21 - 7 Languages",
+  "name": "BLACKJACK 21",
   "short_name": "BLACKJACK 21",
-  "description": "7 languages EN PL DE FR UA RU ES - Blackjack VIP casino",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0a1a0a",
@@ -15,11 +14,6 @@
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "AppIcon-1024.png",
-      "sizes": "1024x1024",
       "type": "image/png"
     }
   ]
