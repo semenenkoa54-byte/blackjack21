@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>BLACKJACK 21</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json?v=4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="BLACKJACK 21">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180-v2.png?v=4">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;background:#0a1a0f;color:#fff;min-height:100vh}
@@ -20,7 +20,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-
 .pill.gold{background:#f5c518;color:#111;border-color:#f5c518}
 .table{max-width:520px;margin:0 auto;padding:10px 14px 20px}
 .card-row{display:flex;gap:8px;flex-wrap:wrap;min-height:96px;justify-content:center;margin:8px 0}
-.card{width:64px;height:92px;background:#fff;color:#111;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:22px;box-shadow:0 4px 14px rgba(0,0,0,.4);position:relative}
+.card{width:64px;height:92px;background:#fff;color:#111;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:22px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
 .card.red{color:#c81e1e}.card small{font-size:13px;opacity:.7}
 .score{text-align:center;font-weight:800;margin:4px 0}
 .msg{text-align:center;min-height:24px;font-weight:800;color:#ffd700;margin:8px 0}
@@ -30,12 +30,19 @@ button{border:0;border-radius:14px;padding:14px 6px;font-weight:900;font-size:15
 .btn-shop{background:#ff6b00;color:#fff;grid-column:span 3;font-size:16px}
 .btn-vip{background:#7c3aed;color:#fff;grid-column:span 3}
 .btn:disabled{opacity:.45}
-.shop{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:flex-end;justify-content:center;z-index:50}
+/* SHOP - like screenshot: dark cards, gold/white buttons */
+.shop{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:flex-end;justify-content:center;z-index:50}
 .shop.open{display:flex}
-.sheet{background:#101f13;width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:18px;max-height:88vh;overflow:auto}
-.pack{background:#1a2f1e;border:1px solid #2d4a32;border-radius:16px;padding:14px;margin:10px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.pack b{font-size:16px}.pack span{font-size:13px;opacity:.8;display:block}
-.buy{background:#f5c518;color:#111;padding:10px 16px;border-radius:12px;font-weight:900}
+.sheet{background:#0a1a0f;width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:18px;max-height:90vh;overflow:auto}
+.shop-card{background:#1a1405;border:1px solid #f5c518;border-radius:20px;padding:18px;margin:14px 0}
+.shop-card.dark{background:#101f13;border-color:#2a4a2f}
+.shop-card h3{margin:2px 0;font-size:38px;letter-spacing:2px}
+.shop-card .sub{color:#d4af37;font-size:13px;letter-spacing:2px;margin-bottom:14px}
+.shop-card img{width:92px;height:92px;border-radius:50%;object-fit:cover;border:3px solid #f5c518}
+.buy-btn{display:block;text-align:center;text-decoration:none;background:#f5c518;color:#111;padding:14px;border-radius:999px;font-weight:900;font-size:16px;margin:10px 0}
+.buy-btn.white{background:#fff;color:#111}
+.buy-btn.vip{background:#f5c518;color:#111}
+.shop-note{font-size:13px;opacity:.6;line-height:1.5}
 .vipbox{background:#241a3a;border:1px solid #7c3aed;border-radius:16px;padding:14px;margin-top:12px}
 .vipbox input{width:100%;padding:12px;border-radius:10px;border:1px solid #444;background:#111;color:#fff;font-weight:800;text-transform:uppercase;margin:8px 0}
 .close{float:right;background:#222;color:#fff;padding:8px 12px}
@@ -43,60 +50,39 @@ button{border:0;border-radius:14px;padding:14px 6px;font-weight:900;font-size:15
 </style>
 </head>
 <body>
-<div class="top">
-<div class="logo">♠ BLACKJACK <span>21</span> 👑</div>
-<div class="lang"><select id="langSel">
-<option value="en">🇬🇧 English</option><option value="pl">🇵🇱 Polski</option><option value="de">🇩🇪 Deutsch</option><option value="fr">🇫🇷 Français</option><option value="uk">🇺🇦 Українська</option><option value="ru">🇷🇺 Русский</option><option value="es">🇪🇸 Español</option>
-</select></div>
-</div>
-<div class="balance">
-<div class="pill" id="chipsLabel">🪙 Chips: <span id="chips">1000</span></div>
-<div class="pill gold" id="vipBadge" style="display:none">👑 VIP ACTIVE</div>
-<div class="pill" id="betLabel">Bet: <span id="bet">100</span></div>
-</div>
+<div class="top"><div class="logo">♠ BLACKJACK <span>21</span> 👑</div><div class="lang"><select id="langSel"><option value="en">🇬🇧 English</option><option value="pl">🇵🇱 Polski</option><option value="de">🇩🇪 Deutsch</option><option value="fr">🇫🇷 Français</option><option value="uk">🇺🇦 Українська</option><option value="ru">🇷🇺 Русский</option><option value="es">🇪🇸 Español</option></select></div></div>
+<div class="balance"><div class="pill">🪙 Chips: <span id="chips">1000</span></div><div class="pill gold" id="vipBadge" style="display:none">👑 VIP ACTIVE</div><div class="pill">Bet: <span id="bet">100</span></div></div>
 <div class="table">
-<div style="text-align:center;font-weight:800" id="dealerTitle">Dealer</div>
-<div class="score" id="dealerScore">-</div>
-<div class="card-row" id="dealerCards"></div>
-<div style="text-align:center;font-weight:800" id="youTitle">You</div>
-<div class="score" id="playerScore">-</div>
-<div class="card-row" id="playerCards"></div>
+<div style="text-align:center;font-weight:800">Dealer</div><div class="score" id="dealerScore">-</div><div class="card-row" id="dealerCards"></div>
+<div style="text-align:center;font-weight:800">You</div><div class="score" id="playerScore">-</div><div class="card-row" id="playerCards"></div>
 <div class="msg" id="msg">Place your bet and hit DEAL!</div>
-<div style="display:flex;gap:8px;justify-content:center;margin:8px 0">
-<button onclick="changeBet(-50)" style="background:#222;color:#fff">-50</button>
-<button onclick="changeBet(50)" style="background:#222;color:#fff">+50</button>
-<button onclick="changeBet(100)" style="background:#222;color:#fff">+100</button>
-<button onclick="changeBet(-100)" style="background:#222;color:#fff">MAX / RESET</button>
+<div style="display:flex;gap:8px;justify-content:center;margin:8px 0"><button onclick="changeBet(-50)" style="background:#222;color:#fff">-50</button><button onclick="changeBet(50)" style="background:#222;color:#fff">+50</button><button onclick="changeBet(100)" style="background:#222;color:#fff">+100</button><button onclick="changeBet(-100)" style="background:#222;color:#fff">RESET</button></div>
+<div class="btns"><button class="btn-hit" id="btnHit" onclick="hit()">HIT</button><button class="btn-stand" id="btnStand" onclick="stand()">STAND</button><button class="btn-double" id="btnDouble" onclick="doubleDown()">DOUBLE</button><button class="btn-new" id="btnDeal" onclick="deal()">🃏 DEAL - New Round</button><button class="btn-shop" onclick="openShop()">🛒 SHOP - Buy Chips</button><button class="btn-vip" onclick="openShop()">👑 ENTER VIP CODE</button></div>
+<div class="footer">Social Casino • 18+ • Virtual chips have no real value • No real gambling • v4 FIXED</div>
 </div>
-<div class="btns">
-<button class="btn-hit" id="btnHit" onclick="hit()">HIT</button>
-<button class="btn-stand" id="btnStand" onclick="stand()">STAND</button>
-<button class="btn-double" id="btnDouble" onclick="doubleDown()">DOUBLE</button>
-<button class="btn-new" id="btnDeal" onclick="deal()">🃏 DEAL - New Round</button>
-<button class="btn-shop" onclick="openShop()">🛒 SHOP - Buy Chips</button>
-<button class="btn-vip" onclick="openShop();document.getElementById('vipInput').focus()">👑 ENTER VIP CODE</button>
-</div>
-<div class="footer" id="footer">Social Casino • 18+ • Virtual chips have no real value • No real gambling</div>
-</div>
-<div class="shop" id="shop">
-<div class="sheet">
+<div class="shop" id="shop"><div class="sheet">
 <button class="close" onclick="closeShop()">✕ Close</button>
 <h2 style="margin:6px 0">🛒 Chip Shop</h2>
-<p style="font-size:13px;opacity:.8">Support indie studio! Buy chips = support. All purchases are for virtual chips only.</p>
-<div class="pack"><div><b>10,000 Chips</b><span>Starter pack • Best for new players</span></div><a class="buy" href="https://www.buymeacoffee.com/Oleksandr23" target="_blank">$3 • BUY</a></div>
-<div class="pack"><div><b>50,000 Chips</b><span>Popular • + FREE 5k bonus</span></div><a class="buy" href="https://www.buymeacoffee.com/Oleksandr23" target="_blank">$10 • BUY</a></div>
-<div class="pack" style="border-color:#f5c518"><div><b>👑 VIP 250,000 Chips</b><span>VIP + Gold Table + No Ads</span></div><a class="buy" href="https://www.buymeacoffee.com/Oleksandr23" target="_blank">$25 • BUY VIP</a></div>
-<p style="font-size:12px;opacity:.7">After payment on BuyMeACoffee / Stripe, you will get a code. Enter it below:</p>
-<div class="vipbox">
-<b>👑 Enter VIP / Chip Code</b>
-<input id="vipInput" placeholder="e.g. VIP21-GOLD">
-<button onclick="redeemCode()" style="background:#f5c518;color:#111;width:100%">✅ REDEEM CODE</button>
-<div id="codeMsg" style="font-size:13px;margin-top:8px;min-height:18px"></div>
-<div style="font-size:12px;opacity:.7;margin-top:8px">Demo codes to test now:<br>• <b>CHIP21-10K</b> = +10,000 chips<br>• <b>CHIP21-50K</b> = +50,000 chips<br>• <b>VIP21-GOLD</b> = VIP + 250,000 chips</div>
-</div>
-<div style="margin-top:14px;display:flex;gap:8px"><button onclick="addFreeChips()" style="background:#1e7a3c;color:#fff;flex:1">🎁 FREE +1000 Daily Bonus</button><button onclick="resetGame()" style="background:#333;color:#fff;flex:1">Reset</button></div>
-</div>
-</div>
+<p class="shop-note">Support indie studio! Each button = its own Stripe payment with Apple Pay 🍎</p>
+
+<!-- PACK 1: 10k $3 - STRIPE $3 -->
+<div class="shop-card"><img src="icon-512-v2.png?v=4" onerror="this.style.display='none'"><div class="sub">CHIPS • OFFLINE</div><h3>10 000</h3><div class="sub">CHIPS • OFFLINE</div>
+<a class="buy-btn" href="https://buy.stripe.com/cNi5kwgjF7oB334gMY1wY00" target="_blank">$3 • ☕ Buy 10k Chips - Stripe</a>
+<div class="shop-note">Instant credit after payment • Apple Pay 🍎 • Code: CHIP21-10K</div></div>
+
+<!-- PACK 2: 50k $10 - STRIPE $10 - FIXED: was $9 / Support $3 -->
+<div class="shop-card dark"><img src="icon-512-v2.png?v=4" onerror="this.style.display='none'"><div class="sub">CHIPS • OFFLINE</div><h3>50 000</h3><div class="sub">CHIPS • OFFLINE</div>
+<a class="buy-btn white" href="https://buy.stripe.com/5kQ3cod7t6kx7jkgMY1wY01" target="_blank">$10 • ☕ Buy 50k Chips - Stripe</a>
+<div class="shop-note">Instant credit after payment • Apple Pay 🍎 • Code: CHIP21-50K</div></div>
+
+<!-- PACK 3: VIP 250k $25 - STRIPE $25 - FIXED: was $20 / Support $3 / 150k -->
+<div class="shop-card dark"><img src="icon-512-v2.png?v=4" onerror="this.style.display='none'"><div class="sub">CHIPS • OFFLINE</div><h3>250 000</h3><div class="sub">CHIPS • VIP • OFFLINE</div>
+<a class="buy-btn vip" href="https://buy.stripe.com/14A6oA9Vh10davw8gs1wY02" target="_blank">$25 • 👑 Buy VIP 250k - Stripe</a>
+<div class="shop-note">VIP + Gold Table • Apple Pay 🍎 • Code: VIP21-GOLD</div></div>
+
+<div class="vipbox"><b>👑 Enter VIP / Chip Code</b><input id="vipInput" placeholder="e.g. VIP21-GOLD"><button onclick="redeemCode()" style="background:#f5c518;color:#111;width:100%">✅ REDEEM CODE</button><div id="codeMsg" style="font-size:13px;margin-top:8px;min-height:18px"></div><div style="font-size:12px;opacity:.7;margin-top:8px">After Stripe payment you are redirected back and chips are added AUTOMATICALLY. If not, enter code here.<br>Demo: CHIP21-10K / CHIP21-50K / VIP21-GOLD</div></div>
+<div style="margin-top:14px;display:flex;gap:8px"><button onclick="addFreeChips()" style="background:#1e7a3c;color:#fff;flex:1">🎁 FREE +1000</button><button onclick="resetGame()" style="background:#333;color:#fff;flex:1">Reset</button></div>
+</div></div>
 <script>
 let chips = parseInt(localStorage.getItem('bj_chips')||'1000');
 let bet = 100; let deck=[], p=[], d=[], gameOver=true, isVip = localStorage.getItem('bj_vip')==='1';
@@ -105,24 +91,20 @@ function save(){localStorage.setItem('bj_chips',chips);localStorage.setItem('bj_
 function newDeck(){let s=['♠','♥','♦','♣'],v=['A','2','3','4','5','6','7','8','9','10','J','Q','K'],deck=[];for(let su of s)for(let val of v)deck.push({v:val,s:su});for(let i=deck.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}return deck;}
 function val(c){if(c.v==='A')return 11;if(['K','Q','J'].includes(c.v))return 10;return parseInt(c.v);}
 function score(hand){let s=0,aces=0;for(let c of hand){s+=val(c);if(c.v==='A')aces++;}while(s>21&&aces>0){s-=10;aces--;}return s;}
-function render(hideDealer=true){let pc=document.getElementById('playerCards');pc.innerHTML='';p.forEach(c=>{let d=document.createElement('div');d.className='card'+(['♥','♦'].includes(c.s)?' red':'');d.innerHTML=c.v+'<small>'+c.s+'</small>';pc.appendChild(d);});
-let dc=document.getElementById('dealerCards');dc.innerHTML='';d.forEach((c,i)=>{let el=document.createElement('div');el.className='card'+(['♥','♦'].includes(c.s)?' red':'');if(i===1&&hideDealer&&!gameOver){el.innerHTML='?<small>?</small>';}else{el.innerHTML=c.v+'<small>'+c.s+'</small>';}dc.appendChild(el);});
-document.getElementById('playerScore').textContent=p.length?score(p):'-';
-document.getElementById('dealerScore').textContent=d.length?(hideDealer&&!gameOver?score([d[0]])+' + ?':score(d)):'-';
-document.getElementById('bet').textContent=bet;}
+function render(hideDealer=true){let pc=document.getElementById('playerCards');pc.innerHTML='';p.forEach(c=>{let d=document.createElement('div');d.className='card'+(['♥','♦'].includes(c.s)?' red':'');d.innerHTML=c.v+'<small>'+c.s+'</small>';pc.appendChild(d);});let dc=document.getElementById('dealerCards');dc.innerHTML='';d.forEach((c,i)=>{let el=document.createElement('div');el.className='card'+(['♥','♦'].includes(c.s)?' red':'');if(i===1&&hideDealer&&!gameOver){el.innerHTML='?<small>?</small>';}else{el.innerHTML=c.v+'<small>'+c.s+'</small>';}dc.appendChild(el);});document.getElementById('playerScore').textContent=p.length?score(p):'-';document.getElementById('dealerScore').textContent=d.length?(hideDealer&&!gameOver?score([d[0]])+' + ?':score(d)):'-';document.getElementById('bet').textContent=bet;}
 function deal(){if(chips<bet){document.getElementById('msg').textContent='Not enough chips! Get FREE bonus or buy in SHOP!';openShop();return;}deck=newDeck();p=[deck.pop(),deck.pop()];d=[deck.pop(),deck.pop()];gameOver=false;document.getElementById('msg').textContent='Your move! HIT or STAND?';document.getElementById('btnHit').disabled=false;document.getElementById('btnStand').disabled=false;document.getElementById('btnDouble').disabled=false;render(true);if(score(p)===21){stand();}}
 function hit(){if(gameOver)return;p.push(deck.pop());render(true);if(score(p)>21){endRound('Bust! You lose 😢');}else if(score(p)===21){stand();}}
-function stand(){if(gameOver)return;gameOver=true;while(score(d)<17){d.push(deck.pop());}render(false);let ps=score(p),ds=score(d);if(ds>21){chips+=bet;endRound('Dealer bust! YOU WIN +'+bet+' 🎉');}else if(ps>ds){chips+=bet;endRound('YOU WIN +'+bet+' 🎉');}else if(ps<ds){chips-=bet;endRound('Dealer wins. -'+bet); }else{endRound('Push - bet returned 🤝');}save();}
+function stand(){if(gameOver)return;gameOver=true;while(score(d)<17){d.push(deck.pop());}render(false);let ps=score(p),ds=score(d);if(ds>21){chips+=bet;endRound('Dealer bust! YOU WIN +'+bet+' 🎉');}else if(ps>ds){chips+=bet;endRound('YOU WIN +'+bet+' 🎉');}else if(ps<ds){chips-=bet;endRound('Dealer wins. -'+bet);}else{endRound('Push - bet returned 🤝');}save();}
 function endRound(t){gameOver=true;document.getElementById('msg').textContent=t;document.getElementById('btnHit').disabled=true;document.getElementById('btnStand').disabled=true;document.getElementById('btnDouble').disabled=true;if(chips<=0){document.getElementById('msg').textContent+=' - Out of chips! Get FREE bonus!';}}
-function doubleDown(){if(gameOver||chips<bet*2)return;chips-=bet;bet*=2;save();p.push(deck.pop());render(true);if(score(p)>21){chips-=0;endRound('Bust on Double!');}else{stand();}}
+function doubleDown(){if(gameOver||chips<bet*2)return;chips-=bet;bet*=2;save();p.push(deck.pop());render(true);if(score(p)>21){endRound('Bust on Double!');}else{stand();}}
 function changeBet(delta){if(delta===-100){bet=100;}else{bet=Math.max(50,Math.min(1000,bet+delta));}document.getElementById('bet').textContent=bet;}
 function openShop(){document.getElementById('shop').classList.add('open');}
 function closeShop(){document.getElementById('shop').classList.remove('open');}
 function addFreeChips(){chips+=1000;save();document.getElementById('codeMsg').textContent='✅ +1000 Free chips added!';}
 function resetGame(){if(confirm('Reset chips to 1000?')){chips=1000;isVip=false;save();location.reload();}}
 function redeemCode(){let code=document.getElementById('vipInput').value.trim().toUpperCase();let used=JSON.parse(localStorage.getItem('bj_used')||'[]');if(!code){document.getElementById('codeMsg').textContent='Enter a code first!';return;}if(used.includes(code)){document.getElementById('codeMsg').textContent='❌ This code already used!';return;}if(codes[code]){let amt=codes[code];chips+=amt;if(code.startsWith('VIP')){isVip=true;}used.push(code);localStorage.setItem('bj_used',JSON.stringify(used));save();document.getElementById('codeMsg').textContent='🎉 SUCCESS! +'+amt+' chips added! '+(code.startsWith('VIP')?'VIP ACTIVATED 👑':'');}else{document.getElementById('codeMsg').textContent='❌ Invalid code. Try CHIP21-10K';}}
-// Language
-const T={en:{},pl:{},de:{},fr:{},uk:{},ru:{},es:{}};
+function autoRedeemFromURL(){try{const params=new URLSearchParams(window.location.search);let code=params.get('code')||'';if(code)code=code.toUpperCase().trim();if(!code&&params.get('success')==='true'){let pack=params.get('pack')||'';if(pack==='10k')code='CHIP21-10K';if(pack==='50k')code='CHIP21-50K';if(pack==='vip')code='VIP21-GOLD';}if(code&&codes[code]){let used=JSON.parse(localStorage.getItem('bj_used')||'[]');if(!used.includes(code)){let amt=codes[code];chips+=amt;if(code.startsWith('VIP')){isVip=true;}used.push(code);localStorage.setItem('bj_used',JSON.stringify(used));save();setTimeout(()=>{document.getElementById('msg').textContent='🎉 Payment successful! +'+amt+' chips added automatically! '+(code.startsWith('VIP')?'VIP ACTIVATED 👑':'');},500);window.history.replaceState({},'',window.location.pathname);}}}catch(e){}}
+autoRedeemFromURL();
 document.getElementById('langSel').addEventListener('change',e=>{localStorage.setItem('bj_lang',e.target.value);});
 let savedLang=localStorage.getItem('bj_lang');if(savedLang)document.getElementById('langSel').value=savedLang;
 save();render(true);document.getElementById('btnHit').disabled=true;document.getElementById('btnStand').disabled=true;document.getElementById('btnDouble').disabled=true;
